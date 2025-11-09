@@ -4,8 +4,8 @@ import 'leaflet/dist/leaflet.css';
 function Map() {
     return (
         <MapContainer
-            center={[51.505, -0.09]}
-            zoom={13}
+            center={[45.424721, -75.695000]}
+            zoom={16}
             style={{ height: '100%', width: '100%', zIndex: 0 }}
         >
             <TileLayer
