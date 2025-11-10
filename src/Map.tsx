@@ -5,8 +5,8 @@ import LocationCard from './LocationCard';
 import { useState } from 'react'
 
 function Map() {
-    const [selectedBike, setSelectedBike] = useState(null);
-    const position = [45.424721, -75.695000];
+    const [selectedBike, setSelectedBike] = useState<boolean>(false);
+    const position: [number, number] = [45.424721, -75.695000];
 
     return (
         <>

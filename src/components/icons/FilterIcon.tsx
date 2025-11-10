@@ -1,4 +1,6 @@
-function FilterIcon(props) {
+import { SVGProps } from 'react';
+
+function FilterIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       viewBox="0 0 24 24"

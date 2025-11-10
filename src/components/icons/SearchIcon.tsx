@@ -1,4 +1,6 @@
-function SearchIcon(props) {
+import { SVGProps } from 'react';
+
+function SearchIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       viewBox="0 0 24 24"
