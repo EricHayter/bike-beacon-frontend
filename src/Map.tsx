@@ -33,7 +33,7 @@ function Map() {
         </MapContainer>
         {selectedBike && (
             <div className="absolute right-4 top-20 z-20">
-                <LocationCard />
+                <LocationCard onClose={() => setSelectedBike(false)} />
             </div>
         )}
         </>

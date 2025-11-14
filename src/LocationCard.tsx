@@ -47,7 +47,11 @@ interface LocationData {
   availableTools: string[];
 }
 
-function LocationCard() {
+interface LocationCardProps {
+  onClose?: () => void;
+}
+
+function LocationCard({ onClose }: LocationCardProps) {
     const [locationData, setLocationData] = useState<LocationData | null>(null);
     const [photos, setPhotos] = useState<string[] | null>(null);
 
@@ -69,7 +73,16 @@ function LocationCard() {
     }, []);
 
     return (
-      <div className="card bg-base-100 w-96 shadow-sm">
+      <div className="card bg-base-100 w-96 shadow-sm relative overflow-hidden">
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 z-10 bg-base-100/80 backdrop-blur-sm hover:bg-primary hover:text-primary-content transition-colors border-none"
+            aria-label="Close"
+          >
+            ✕
+          </button>
+        )}
         {!locationData ? (
           <>
             <figure className="w-full h-64 bg-base-200 flex items-center justify-center">
