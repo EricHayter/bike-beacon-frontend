@@ -1,15 +1,15 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 //import Icon from './Icon'
-import LocationCard from './LocationCard';
-import { useState } from 'react'
 
-function Map() {
-    const [selectedBike, setSelectedBike] = useState<boolean>(false);
+interface MapProps {
+    setSelectedBike: (selected: boolean) => void;
+}
+
+function Map({ setSelectedBike }: MapProps) {
     const position: [number, number] = [45.424721, -75.695000];
 
     return (
-        <>
         <MapContainer
             center={position}
             zoom={16}
@@ -31,12 +31,6 @@ function Map() {
             </Popup>
           </Marker>
         </MapContainer>
-        {selectedBike && (
-            <div className="absolute right-4 top-20 z-20">
-                <LocationCard onClose={() => setSelectedBike(false)} />
-            </div>
-        )}
-        </>
     );
 }
 
