@@ -21,7 +21,7 @@ function PhotoCarrossel({ photos }: PhotoCarrosselProps) {
     }
 
     return (
-      <div className="carousel w-full h-64">
+      <div className="carousel w-full h-64 rounded-box">
           {photos.map((photo_url, idx) => (
                 <div key={idx} id={"slide" + idx} className="carousel-item relative w-full h-64">
                   <img
