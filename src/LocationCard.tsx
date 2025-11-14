@@ -41,7 +41,10 @@ function PhotoCarrossel({ photos }: PhotoCarrosselProps) {
 }
 
 interface LocationData {
-  // Add properties as you build out the data structure
+  name: string;
+  address: string;
+  recentNegativeReports: number;
+  availableTools: string[];
 }
 
 function LocationCard() {
@@ -50,7 +53,12 @@ function LocationCard() {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setLocationData({});
+            setLocationData({
+                name: "Parliament Hill Bike Station",
+                address: "Wellington St, Ottawa, ON K1A 0A9",
+                recentNegativeReports: 8,
+                availableTools: ["Tire Pump", "Multi-tool", "Chain Lubricant", "Patch Kit"]
+            });
             setPhotos([
                 "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fgardensottawa.ca%2Fwp-content%2Fuploads%2F2020%2F12%2Fottawa-city-hall-marion-dewar-plaza-front-lawn.jpg&f=1&nofb=1&ipt=c4d347cdcc8a614d540887d6e88f5de7c8239d33fb24981460ffbb159562ebd9",
                 "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.tripsavvy.com%2Fthmb%2FvfDxFUTB0TUTqo-eZ-4ar9uCi0s%3D%2F2168x1382%2Ffilters%3Ano_upscale()%3Amax_bytes(150000)%3Astrip_icc()%2Fparliament-hill-in-fall--ottawa--ontario--canada-1064713266-b595c67f48ca4778a985b13bb598ba04.jpg&f=1&nofb=1&ipt=cda5769eb73f79dddfb5458649c4dbdcc46b3ec01227cb0f4245d9966e68eea6"
@@ -82,10 +90,45 @@ function LocationCard() {
           <>
             <PhotoCarrossel photos={photos} />
             <div className="card-body min-h-64">
-              <h2 className="card-title">Card Title</h2>
-              <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-              <div className="card-actions justify-end">
-                <button className="btn btn-primary">Buy Now</button>
+              <h2 className="card-title">{locationData.name}</h2>
+
+              <div className="space-y-3">
+                <div>
+                  <p className="text-sm font-semibold text-base-content/70">Address</p>
+                  <p className="text-sm">{locationData.address}</p>
+                </div>
+
+                <div>
+                  <p className="text-sm font-semibold text-base-content/70">Status</p>
+                  {locationData.recentNegativeReports > 5 ? (
+                    <div className="badge badge-warning gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block h-4 w-4 stroke-current">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                      </svg>
+                      High negative reports ({locationData.recentNegativeReports})
+                    </div>
+                  ) : (
+                    <div className="badge badge-success gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block h-4 w-4 stroke-current">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      Good condition
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <p className="text-sm font-semibold text-base-content/70 mb-2">Available Tools</p>
+                  <div className="flex flex-wrap gap-2">
+                    {locationData.availableTools.map((tool, idx) => (
+                      <div key={idx} className="badge badge-outline">{tool}</div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="card-actions justify-end mt-4">
+                <button className="btn btn-primary btn-sm">Leave Review</button>
               </div>
             </div>
           </>
