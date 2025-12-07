@@ -61,7 +61,7 @@ function LocationCard({ onClose }: LocationCardProps) {
             <div>
               {/* Tools */}
               <div>
-                <ul className="list bg-base-100 rounded-box shadow-md">
+                <ul className="list bg-base-100">
                   <li className="p-4 pb-2 text-xs tracking-wide opacity-60">
                     Available Tools
                   </li>
