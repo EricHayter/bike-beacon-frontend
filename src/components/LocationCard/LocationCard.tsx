@@ -43,7 +43,7 @@ function LocationCard({ onClose }: LocationCardProps) {
         {onClose && (
           <button
             onClick={onClose}
-            className="btn btn-sm btn-circle absolute right-2 top-2 z-10 bg-base-100/80 backdrop-blur-sm hover:bg-primary hover:text-primary-content transition-colors border-none"
+            className="btn btn-sm btn-square btn-ghost absolute right-2 top-2 z-10 bg-base-100/70"
             aria-label="Close"
           >
             ✕
@@ -67,13 +67,12 @@ function LocationCard({ onClose }: LocationCardProps) {
                         </div>
 
 
-                        <div className="flex items-center">{tool}</div>
-                        {/* check marks instead */}
+                        <div className="flex items-center flex-1">{tool}</div>
                         <div className="dropdown dropdown-end">
-                          <div tabIndex={0} role="button" className="btn btn-xs m-1">Report</div>
+                          <div tabIndex={0} role="button" className="btn btn-xs btn-soft">Report</div>
                           <div
                             tabIndex={0}
-                            className="dropdown-content card card-sm bg-base-100 w-64 z-50 shadow-md">
+                            className="dropdown-content card card-sm bg-base-100 w-64 z-50 shadow-lg">
                             <div className="card-body">
                              <button className="btn btn-soft btn-success btn-sm">
                                <CheckIcon />
