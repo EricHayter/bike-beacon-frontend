@@ -1,4 +1,4 @@
-import { SVGProps } from 'react';
+import { SVGProps } from "react";
 
 function CheckIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -11,11 +11,7 @@ function CheckIcon(props: SVGProps<SVGSVGElement>) {
       strokeWidth="2"
       {...props}
     >
-      <path
-        d="M20 6L9 17l-5-5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
