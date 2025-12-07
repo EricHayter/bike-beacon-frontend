@@ -1,7 +1,7 @@
-import Map from './Map'
+import Map from '../Map/Map'
 import './App.css'
-import Navbar from './Navbar'
-import LocationCard from './LocationCard'
+import Navbar from '../Navbar/Navbar'
+import LocationCard from '../LocationCard/LocationCard'
 import { useState } from 'react'
 
 function App() {
