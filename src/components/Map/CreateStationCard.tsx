@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface CreateStationCardProps {
   onCancel: () => void;
@@ -20,6 +20,20 @@ function CreateStationCard({ onCancel, onCreate }: CreateStationCardProps) {
   const [selectedTools, setSelectedTools] = useState<string[]>([]);
   const [selectedTool, setSelectedTool] = useState<string>(AVAILABLE_TOOLS[0]);
   const dropdownRef = useRef<HTMLDetailsElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        dropdownRef.current.open = false;
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   const handleAddTool = () => {
     if (selectedTool && !selectedTools.includes(selectedTool)) {
@@ -68,8 +82,21 @@ function CreateStationCard({ onCancel, onCreate }: CreateStationCardProps) {
 
               <li className="list-row flex items-center gap-2 px-6 py-2">
                 <details ref={dropdownRef} className="dropdown flex-1">
-                  <summary className="btn btn-sm w-full justify-start">
-                    {selectedTool}
+                  <summary className="btn btn-sm w-full justify-between">
+                    <span>{selectedTool}</span>
+                    <svg
+                      className="h-4 w-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
                   </summary>
                   <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-full shadow-lg">
                     {AVAILABLE_TOOLS.filter(
