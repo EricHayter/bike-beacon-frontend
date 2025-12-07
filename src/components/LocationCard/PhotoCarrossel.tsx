@@ -45,15 +45,39 @@ function PhotoCarrossel({ photos }: PhotoCarrosselProps) {
           <div className="absolute top-1/2 right-5 left-5 flex -translate-y-1/2 transform justify-between">
             <a
               href={"#slide" + ((idx + photos.length - 1) % photos.length)}
-              className="btn btn-circle"
+              className="btn btn-sm btn-circle flex items-center justify-center"
             >
-              ❮
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
             </a>
             <a
               href={"#slide" + ((idx + 1) % photos.length)}
-              className="btn btn-circle"
+              className="btn btn-sm btn-circle flex items-center justify-center"
             >
-              ❯
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
             </a>
           </div>
         </div>
