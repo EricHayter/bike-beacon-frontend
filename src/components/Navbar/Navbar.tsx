@@ -1,5 +1,5 @@
-import FilterIcon from './components/icons/FilterIcon';
-import SearchIcon from './components/icons/SearchIcon';
+import FilterIcon from '../icons/FilterIcon';
+import SearchIcon from '../icons/SearchIcon';
 
 function Navbar() {
   return (
