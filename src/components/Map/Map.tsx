@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import { useState } from 'react';
 import 'leaflet/dist/leaflet.css';
-import CreateStationModal from './CreateStationModal';
+import CreateStationCard from './CreateStationCard';
 //import Icon from './Icon'
 
 interface MapProps {
@@ -68,11 +68,12 @@ function Map({ setSelectedBike }: MapProps) {
                 ))}
             </MapContainer>
 
-            <CreateStationModal
-                isOpen={showCreateModal}
-                onCancel={handleCancelCreate}
-                onCreate={handleCreateStation}
-            />
+            {showCreateModal && (
+                <CreateStationCard
+                    onCancel={handleCancelCreate}
+                    onCreate={handleCreateStation}
+                />
+            )}
         </>
     );
 }
