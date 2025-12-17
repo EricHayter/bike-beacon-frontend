@@ -2,20 +2,10 @@ import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import { useState, useEffect, useCallback, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 import CreateStationCard from "./CreateStationCard";
-//import Icon from './Icon'
+import BikeStation from "../../types/station"
 
 interface MapProps {
   setSelectedBike: (selected: boolean) => void;
-}
-
-interface BikeStation {
-  Id: string;
-  AddressStr: string;
-  Location: {
-    lng: number;
-    lat: number;
-  };
-  CreatedAt: string;
 }
 
 // Component that handles map clicks and movement

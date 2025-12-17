@@ -2,25 +2,21 @@ import { useState, useEffect } from "react";
 import PhotoCarrossel from "./PhotoCarrossel";
 import CheckIcon from "../icons/CheckIcon";
 import ReportIcon from "../icons/ReportIcon";
-
-interface LocationData {
-  address: string;
-  recentNegativeReports: number;
-  availableTools: string[];
-}
+import BikeStation from "../../types/station"
 
 interface LocationCardProps {
   onClose?: () => void;
 }
 
 function LocationCard({ onClose }: LocationCardProps) {
-  const [locationData, setLocationData] = useState<LocationData | null>(null);
+  const [bikeStationData, setBikeStationData] = useState<BikeStation | null>(null);
   const [photos, setPhotos] = useState<string[] | null>(null);
+  const [tools, setTools] = useState<any>;
 
   // TODO move this stuff outside of the prop we should be testing this from the parent component
   useEffect(() => {
     const timer = setTimeout(() => {
-      setLocationData({
+      setBikeStationData({
         address: "Wellington St, Ottawa, ON K1A 0A9",
         recentNegativeReports: 8,
         availableTools: [
@@ -54,10 +50,10 @@ function LocationCard({ onClose }: LocationCardProps) {
           ✕
         </button>
       )}
-      {locationData ? (
+      {bikeStationData ? (
         <>
           <div className="card-body min-h-64">
-            <h2 className="card-title">{locationData.address}</h2>
+            <h2 className="card-title">{bikeStationData.AddressStr}</h2>
             <div>
               {/* Tools */}
               <div>
@@ -66,7 +62,7 @@ function LocationCard({ onClose }: LocationCardProps) {
                     Available Tools
                   </li>
 
-                  {locationData.availableTools.map((tool, idx) => (
+                  {bikeStationData.availableTools.map((tool, idx) => (
                     <li key={idx} className="list-row py-2">
                       {/* replace with icons */}
                       <div>{/* Bike pump icon */}</div>
