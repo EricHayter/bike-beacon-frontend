@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 import CreateStationCard from "./CreateStationCard";
 //import Icon from './Icon'
@@ -8,43 +8,137 @@ interface MapProps {
   setSelectedBike: (selected: boolean) => void;
 }
 
-// Component that handles map clicks
-function MapClickHandler({
+interface BikeStation {
+  Id: string;
+  AddressStr: string;
+  Location: {
+    lng: number;
+    lat: number;
+  };
+  CreatedAt: string;
+}
+
+// Component that handles map clicks and movement
+function MapEventHandler({
   onMapClick,
+  onBoundsChange,
 }: {
   onMapClick: (latlng: [number, number]) => void;
+  onBoundsChange: (bounds: L.LatLngBounds) => void;
 }) {
-  useMapEvents({
+  const map = useMapEvents({
     click: (e) => {
       onMapClick([e.latlng.lat, e.latlng.lng]);
     },
+
+    moveend: () => {
+      onBoundsChange(map.getBounds());
+    },
   });
+
+  // Load initial markers when map is ready
+  useEffect(() => {
+    onBoundsChange(map.getBounds());
+  }, [map, onBoundsChange]);
+
   return null;
 }
 
 function Map({ setSelectedBike }: MapProps) {
   const position: [number, number] = [45.424721, -75.695];
-  const [markers, setMarkers] = useState<[number, number][]>([position]);
+  const [stations, setStations] = useState<BikeStation[]>([]);
   const [pendingPosition, setPendingPosition] = useState<
     [number, number] | null
   >(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showCreateCard, setShowCreateCard] = useState(false);
+
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  // Load markers from API based on map bounds with debouncing
+  const loadMarkers = useCallback(async (bounds: L.LatLngBounds) => {
+    // Cancel any pending request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // Clear existing debounce timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // Debounce the API call by 300ms
+    debounceTimerRef.current = setTimeout(async () => {
+      // Create new abort controller for this request
+      abortControllerRef.current = new AbortController();
+
+      try {
+        const center = bounds.getCenter();
+        const response = await fetch(
+          `/api/stations?` +
+            new URLSearchParams({
+              lat: center.lat.toString(),
+              lng: center.lng.toString(),
+            }),
+          { signal: abortControllerRef.current.signal }
+        );
+
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+
+        const data: BikeStation[] = await response.json();
+        setStations(data);
+      } catch (error) {
+        // Ignore abort errors
+        if (error instanceof Error && error.name === 'AbortError') {
+          return;
+        }
+        console.error("Failed to load bike stations:", error);
+        // Optionally: show error to user
+      } finally {
+      }
+    }, 300);
+  }, []);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
 
   const handleMapClick = (latlng: [number, number]) => {
     setPendingPosition(latlng);
-    setShowCreateModal(true);
+    setShowCreateCard(true);
   };
 
   const handleCreateStation = () => {
     if (pendingPosition) {
-      setMarkers((prev) => [...prev, pendingPosition]);
+      // TODO: Send POST request to create station
+      // For now, add to local state
+      const newStation: BikeStation = {
+        Id: `temp-${Date.now()}`,
+        AddressStr: "New Station",
+        Location: {
+          lat: pendingPosition[0],
+          lng: pendingPosition[1],
+        },
+        CreatedAt: new Date().toISOString(),
+      };
+      setStations((prev) => [...prev, newStation]);
     }
-    setShowCreateModal(false);
+    setShowCreateCard(false);
     setPendingPosition(null);
   };
 
   const handleCancelCreate = () => {
-    setShowCreateModal(false);
+    setShowCreateCard(false);
     setPendingPosition(null);
   };
 
@@ -60,20 +154,31 @@ function Map({ setSelectedBike }: MapProps) {
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           maxZoom={19}
         />
-        <MapClickHandler onMapClick={handleMapClick} />
+        <MapEventHandler
+          onMapClick={handleMapClick}
+          onBoundsChange={loadMarkers}
+        />
 
-        {markers.map((markerPos, idx) => (
+        {stations.map((station) => (
           <Marker
-            key={idx}
-            position={markerPos}
+            key={station.Id}
+            position={[station.Location.lat, station.Location.lng]}
             eventHandlers={{
               click: () => setSelectedBike(true),
             }}
           ></Marker>
         ))}
+
+        {/* Temporary marker while creating new station */}
+        {pendingPosition && (
+          <Marker
+            position={pendingPosition}
+            opacity={0.6}
+          ></Marker>
+        )}
       </MapContainer>
 
-      {showCreateModal && (
+      {showCreateCard && (
         <CreateStationCard
           onCancel={handleCancelCreate}
           onCreate={handleCreateStation}
