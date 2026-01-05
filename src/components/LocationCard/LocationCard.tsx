@@ -1,39 +1,34 @@
 import { useState, useEffect } from "react";
 import PhotoCarrossel from "./PhotoCarrossel";
-import CheckIcon from "../icons/CheckIcon";
-import ReportIcon from "../icons/ReportIcon";
+import ToolsList from "./ToolsList";
 import BikeStation from "../../types/station"
 
-interface LocationCardProps {
-  onClose?: () => void;
-}
-
-function LocationCard({ onClose }: LocationCardProps) {
-  const [bikeStationData, setBikeStationData] = useState<BikeStation | null>(null);
+function LocationCard({station, onClose }: { station: BikeStation, onClose: () => void} ) {
   const [photos, setPhotos] = useState<string[] | null>(null);
-  const [tools, setTools] = useState<any>;
+  const [photosLoading, setPhotosLoading] = useState(true);
 
-  // TODO move this stuff outside of the prop we should be testing this from the parent component
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setBikeStationData({
-        address: "Wellington St, Ottawa, ON K1A 0A9",
-        recentNegativeReports: 8,
-        availableTools: [
-          "Tire Pump",
-          "Multi-tool",
-          "Chain Lubricant",
-          "Patch Kit",
-        ],
-      });
-      setPhotos([
-        "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fgardensottawa.ca%2Fwp-content%2Fuploads%2F2020%2F12%2Fottawa-city-hall-marion-dewar-plaza-front-lawn.jpg&f=1&nofb=1&ipt=c4d347cdcc8a614d540887d6e88f5de7c8239d33fb24981460ffbb159562ebd9",
-        "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.tripsavvy.com%2Fthmb%2FvfDxFUTB0TUTqo-eZ-4ar9uCi0s%3D%2F2168x1382%2Ffilters%3Ano_upscale()%3Amax_bytes(150000)%3Astrip_icc()%2Fparliament-hill-in-fall--ottawa--ontario--canada-1064713266-b595c67f48ca4778a985b13bb598ba04.jpg&f=1&nofb=1&ipt=cda5769eb73f79dddfb5458649c4dbdcc46b3ec01227cb0f4245d9966e68eea6",
-      ]);
-    }, 2000);
+    const fetchPhotos = async () => {
+      try {
+        setPhotosLoading(true);
+        const response = await fetch(`${import.meta.env.VITE_API_PREFIX}/stations/${station.Id}/photos`);
 
-    return () => clearTimeout(timer); // cleanup on unmount
-  }, []);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch photos: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        setPhotos(data); // Assuming backend returns an array of photo URLs
+      } catch (error) {
+        console.error('Error fetching photos:', error);
+        setPhotos([]); // Set empty array on error
+      } finally {
+        setPhotosLoading(false);
+      }
+    };
+
+    fetchPhotos();
+  }, [station.Id])
 
   return (
     <div className="card bg-base-100 h-min-128 relative w-96 overflow-visible shadow-sm">
@@ -50,62 +45,18 @@ function LocationCard({ onClose }: LocationCardProps) {
           ✕
         </button>
       )}
-      {bikeStationData ? (
-        <>
           <div className="card-body min-h-64">
-            <h2 className="card-title">{bikeStationData.AddressStr}</h2>
+            <h2 className="card-title">{station.AddressStr}</h2>
             <div>
               {/* Tools */}
-              <div>
-                <ul className="list bg-base-100">
-                  <li className="p-4 pb-2 text-xs tracking-wide opacity-60">
-                    Available Tools
-                  </li>
-
-                  {bikeStationData.availableTools.map((tool, idx) => (
-                    <li key={idx} className="list-row py-2">
-                      {/* replace with icons */}
-                      <div>{/* Bike pump icon */}</div>
-
-                      <div className="flex flex-1 items-center">{tool}</div>
-                      <div className="dropdown dropdown-end">
-                        <div
-                          tabIndex={0}
-                          role="button"
-                          className="btn btn-xs btn-soft"
-                        >
-                          Report
-                        </div>
-                        <div
-                          tabIndex={0}
-                          className="dropdown-content card card-sm bg-base-100 z-50 w-64 shadow-lg"
-                        >
-                          <div className="card-body">
-                            <button className="btn btn-soft btn-success btn-sm">
-                              <CheckIcon />
-                              working
-                            </button>
-                            <button className="btn btn-soft btn-error btn-sm">
-                              <ReportIcon />
-                              report
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <ToolsList stationId={station.Id} />
             </div>
           </div>
-        </>
-      ) : (
-        <LocationCardSkeleton />
-      )}
     </div>
   );
 }
 
+// TOOD maybe get rid of this I don't have any use for it at the moment
 function LocationCardSkeleton() {
   return (
     <>

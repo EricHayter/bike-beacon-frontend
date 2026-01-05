@@ -3,17 +3,21 @@ import "./App.css";
 import Navbar from "../Navbar/Navbar";
 import LocationCard from "../LocationCard/LocationCard";
 import { useState } from "react";
+import BikeStation from "../../types/station"
 
 function App() {
-  const [selectedBike, setSelectedBike] = useState<boolean>(false);
+  const [selectedStation, setSelectedStation] = useState<BikeStation | null>(null);
 
   return (
     <>
       <Navbar />
-      <Map setSelectedBike={setSelectedBike} />
-      {selectedBike && (
+      <Map setSelectedBike={setSelectedStation} />
+      {selectedStation && (
         <div className="absolute top-20 right-4 z-20">
-          <LocationCard onClose={() => setSelectedBike(false)} />
+          <LocationCard
+             station={selectedStation}
+             onClose={() => setSelectedStation(null)}
+          />
         </div>
       )}
     </>
