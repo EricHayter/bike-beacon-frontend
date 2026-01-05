@@ -11,7 +11,7 @@ function LocationCard({station, onClose }: { station: BikeStation, onClose: () =
     const fetchPhotos = async () => {
       try {
         setPhotosLoading(true);
-        const response = await fetch(`${import.meta.env.VITE_API_PREFIX}/stations/${station.Id}/photos`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/stations/${station.Id}/photos`);
 
         if (!response.ok) {
           throw new Error(`Failed to fetch photos: ${response.statusText}`);

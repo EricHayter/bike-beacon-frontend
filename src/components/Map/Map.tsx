@@ -66,7 +66,7 @@ function Map({ setSelectedBike }: MapProps) {
             try {
                 const center = bounds.getCenter();
                 const response = await fetch(
-                    `${import.meta.env.VITE_API_PREFIX}/stations?` +
+                    `${import.meta.env.VITE_API_URL}/stations?` +
                         new URLSearchParams({
                         lat: center.lat.toString(),
                         lng: center.lng.toString(),

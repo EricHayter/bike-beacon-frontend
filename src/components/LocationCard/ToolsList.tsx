@@ -21,7 +21,7 @@ function ToolsList({ stationId }: {stationId: string}) {
         const fetchToolData = async () => {
           try {
           // Fetch tools for this specific station
-          const toolsRes  = await fetch(`${import.meta.env.VITE_API_PREFIX}/stations/${stationId}/tools`);
+          const toolsRes  = await fetch(`${import.meta.env.VITE_API_URL}/stations/${stationId}/tools`);
 
           if (!toolsRes.ok) {
             throw new Error('Failed to fetch tools');
