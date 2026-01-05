@@ -83,7 +83,7 @@ function ToolsList({ stationId }: {stationId: string}) {
 }
 
 function formatToolTypeString(toolType: string) {
-  return toolType.replace('_', ' ').toLocaleLowerCase().replace(/\b\w/g, function(char) {
+  return toolType.replace(/_/g, ' ').toLocaleLowerCase().replace(/\b\w/g, function(char) {
     return char.toUpperCase();
   });
 }
